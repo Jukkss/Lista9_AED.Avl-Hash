@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Lista9_AED.Avl_Hash
 {
@@ -10,7 +6,7 @@ namespace Lista9_AED.Avl_Hash
     {
         static void MostrarMenu()
         {
-            Console.WriteLine("=======================================");
+            Console.WriteLine("\n=======================================");
             Console.WriteLine("      SISTEMA DE PACIENTES - MENU      ");
             Console.WriteLine("=======================================");
             Console.WriteLine("1 - Cadastrar um paciente");
@@ -21,42 +17,73 @@ namespace Lista9_AED.Avl_Hash
             Console.WriteLine("6 - Mostrar e-mails (caminhamento pré-ordem)");
             Console.WriteLine("7 - Sair");
         }
+
         static void Main(string[] args)
         {
-            MostrarMenu();
-            int op = int.Parse(Console.ReadLine());
+            Avl avl = new Avl();
+            int op;
+
             do
             {
-                switch(op)
+                MostrarMenu();
+                Console.Write("Opção: ");
+                op = int.Parse(Console.ReadLine());
+
+                switch (op)
                 {
                     case 1:
-
+                        Console.Write("CPF: ");
+                        long cpf = long.Parse(Console.ReadLine());
+                        Console.Write("Nome: ");
+                        string nome = Console.ReadLine();
+                        Console.Write("Email: ");
+                        string email = Console.ReadLine();
+                        Console.Write("Telefone: ");
+                        string telefone = Console.ReadLine();
+                        avl.Inserir(new Paciente(cpf, nome, email, telefone));
                         break;
+
                     case 2:
-
+                        Console.Write("Informe o CPF a ser removido: ");
+                        long cpfRemover = long.Parse(Console.ReadLine());
+                        avl.Remover(cpfRemover);
                         break;
+
                     case 3:
-
+                        Console.Write("Informe o CPF para busca: ");
+                        long cpfBuscar = long.Parse(Console.ReadLine());
+                        var paciente = avl.Pesquisar(cpfBuscar);
+                        if (paciente == null)
+                            Console.WriteLine("Paciente não cadastrado.");
+                        else
+                            Console.WriteLine(paciente);
                         break;
+
                     case 4:
-
+                        Console.WriteLine("Nomes (central):");
+                        avl.CaminharCentral();
                         break;
+
                     case 5:
-
+                        Console.WriteLine("CPFs (pós-ordem):");
+                        avl.CaminharPos();
                         break;
+
                     case 6:
+                        Console.WriteLine("E-mails (pré-ordem):");
+                        avl.CaminharPre();
+                        break;
 
-                        break;
                     case 7:
+                        Console.WriteLine("Encerrando...");
                         break;
+
                     default:
-                        Console.WriteLine("Escolha uma opção válida");
-                        op = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Opção inválida.");
                         break;
                 }
-                Console.WriteLine("Escolha uma nova execução do menu:");
-                op = int.Parse(Console.ReadLine());
             } while (op != 7);
         }
     }
 }
+

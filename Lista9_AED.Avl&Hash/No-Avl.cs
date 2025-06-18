@@ -8,22 +8,23 @@ namespace Lista9_AED.Avl_Hash
 {
     internal class No
     {
+        private Paciente paciente;
         private int elemento;
         private No esq;
         private No dir;
         private int nivel;
 
-        public No(int elemento, No esq, No dir, int nivel)
+        public No(Paciente paciente, No esq, No dir, int nivel)
         {
-            this.elemento = elemento;
+            this.paciente = paciente;
             this.esq = esq;
             this.dir = dir;
             this.nivel = nivel;
         }
 
-        public No(int elemento)
+        public No(Paciente paciente)
         {
-            this.elemento = elemento;
+            this.paciente = paciente;
             this.esq = null;
             this.dir = null;
             this.nivel = 1;
@@ -56,6 +57,11 @@ namespace Lista9_AED.Avl_Hash
             get { return dir; }
             set { dir = value; }
         }
+        public Paciente Paciente
+        {
+            get { return paciente; }
+            set { paciente = value; }
+        }
     }
 
     internal class Avl
@@ -67,21 +73,21 @@ namespace Lista9_AED.Avl_Hash
             raiz = null;
         }
 
-        public bool Pesquisar(int x)
+        public Paciente Pesquisar(long cpf)
         {
-            return Pesquisar(x, raiz);
+            return Pesquisar(cpf, raiz);
         }
 
-        private bool Pesquisar(int x, No i)
+        private Paciente Pesquisar(long cpf, No i)
         {
             if (i == null)
-                return false;
-            else if (x == i.Elemento)
-                return true;
-            else if (x < i.Elemento)
-                return Pesquisar(x, i.Esq);
+                return null;
+            else if (cpf == i.Paciente.Cpf)
+                return i.Paciente;
+            else if (cpf < i.Paciente.Cpf)
+                return Pesquisar(cpf, i.Esq);
             else
-                return Pesquisar(x, i.Dir);
+                return Pesquisar(cpf, i.Dir);
         }
 
         public void CaminharCentral()
@@ -94,7 +100,7 @@ namespace Lista9_AED.Avl_Hash
             if (i != null)
             {
                 CaminharCentral(i.Esq);
-                Console.Write(i.Elemento + " ");
+                Console.WriteLine(i.Paciente.Nome);
                 CaminharCentral(i.Dir);
             }
         }
@@ -108,7 +114,7 @@ namespace Lista9_AED.Avl_Hash
         {
             if (i != null)
             {
-                Console.Write(i.Elemento + "(fator " + (No.GetNivel(i.Dir) - No.GetNivel(i.Esq)) + ") ");
+                Console.WriteLine(i.Paciente.Email);
                 CaminharPre(i.Esq);
                 CaminharPre(i.Dir);
             }
@@ -125,67 +131,56 @@ namespace Lista9_AED.Avl_Hash
             {
                 CaminharPos(i.Esq);
                 CaminharPos(i.Dir);
-                Console.Write(i.Elemento + " ");
+                Console.WriteLine(i.Paciente.Cpf);
             }
         }
 
-        public void Inserir(int x)
+        public void Inserir(Paciente paciente)
         {
-            raiz = Inserir(x, raiz);
+            raiz = Inserir(paciente, raiz);
         }
 
-        private No Inserir(int x, No i)
+        private No Inserir(Paciente paciente, No i)
         {
             if (i == null)
             {
-                i = new No(x);
+                i = new No(paciente);
             }
-            else if (x < i.Elemento)
+            else if (paciente.Cpf < i.Paciente.Cpf)
             {
-                i.Esq = Inserir(x, i.Esq);
+                i.Esq = Inserir(paciente, i.Esq);
             }
-            else if (x > i.Elemento)
+            else if (paciente.Cpf > i.Paciente.Cpf)
             {
-                i.Dir = Inserir(x, i.Dir);
+                i.Dir = Inserir(paciente, i.Dir);
             }
             else
             {
-                throw new Exception("Erro ao inserir! Elemento duplicado: " + x);
+                throw new Exception("Erro ao inserir! CPF duplicado: " + paciente.Cpf);
             }
             return Balancear(i);
         }
 
-        public void Remover(int x)
+        public void Remover(long cpf)
         {
-            raiz = Remover(x, raiz);
+            raiz = Remover(cpf, raiz);
         }
 
-        private No Remover(int x, No i)
+        private No Remover(long cpf, No i)
         {
             if (i == null)
-            {
-                throw new Exception("Erro ao remover! Elemento não encontrado: " + x);
-            }
-            else if (x < i.Elemento)
-            {
-                i.Esq = Remover(x, i.Esq);
-            }
-            else if (x > i.Elemento)
-            {
-                i.Dir = Remover(x, i.Dir);
-            }
+                throw new Exception("Erro ao remover! Paciente não encontrado: " + cpf);
+            else if (cpf < i.Paciente.Cpf)
+                i.Esq = Remover(cpf, i.Esq);
+            else if (cpf > i.Paciente.Cpf)
+                i.Dir = Remover(cpf, i.Dir);
             else if (i.Dir == null)
-            {
                 i = i.Esq;
-            }
             else if (i.Esq == null)
-            {
                 i = i.Dir;
-            }
             else
-            {
                 i.Esq = MaiorEsq(i, i.Esq);
-            }
+
             return Balancear(i);
         }
 
@@ -193,7 +188,7 @@ namespace Lista9_AED.Avl_Hash
         {
             if (j.Dir == null)
             {
-                i.Elemento = j.Elemento;
+                i.Paciente = j.Paciente;
                 j = j.Esq;
             }
             else
@@ -234,7 +229,7 @@ namespace Lista9_AED.Avl_Hash
                 else
                 {
                     throw new Exception(
-                        "Erro no No(" + no.Elemento + ") com fator de balanceamento (" +
+                        "Erro no nó com CPF(" + no.Paciente.Cpf + ") com fator (" +
                         fator + ") inválido!");
                 }
             }
@@ -243,7 +238,7 @@ namespace Lista9_AED.Avl_Hash
 
         private No RotacionarDir(No no)
         {
-            Console.WriteLine("Rotacionar DIR(" + no.Elemento + ")");
+            Console.WriteLine("Rotacionar DIR(" + no.Paciente.Cpf + ")");
             No noEsq = no.Esq;
             No noEsqDir = noEsq.Dir;
 
@@ -258,7 +253,7 @@ namespace Lista9_AED.Avl_Hash
 
         private No RotacionarEsq(No no)
         {
-            Console.WriteLine("Rotacionar ESQ(" + no.Elemento + ")");
+            Console.WriteLine("Rotacionar ESQ(" + no.Paciente.Cpf + ")");
             No noDir = no.Dir;
             No noDirEsq = noDir.Esq;
 

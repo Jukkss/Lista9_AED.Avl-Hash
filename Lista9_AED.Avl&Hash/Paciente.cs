@@ -8,10 +8,10 @@ namespace Lista9_AED.Avl_Hash
 {
     internal class Paciente
     {
-        private long Cpf { get; set; }
-        private string Nome { get; set; }
-        private string Email { get; set; }
-        private string Telefone { get; set; }
+        public long Cpf { get; set; }
+        public string Nome { get; set; }
+        public string Email { get; set; }
+        public string Telefone { get; set; }
 
         public Paciente (long cpf, string nome, string email, string telefone)
         {
@@ -19,6 +19,10 @@ namespace Lista9_AED.Avl_Hash
             this.Nome = nome;
             this.Email = email;
             this.Telefone = telefone;
+        }
+        public override string ToString()
+        {
+            return $"CPF: {Cpf} | Nome: {Nome} | Email: {Email} | Telefone: {Telefone}";
         }
     }  
 }
