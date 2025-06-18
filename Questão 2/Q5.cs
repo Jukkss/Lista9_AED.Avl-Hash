@@ -26,16 +26,10 @@ namespace Questão_2
             do
             {
                 MostrarMenu();
-                bool valido = int.TryParse(Console.ReadLine(), out opcao);
-                if (!valido)
-                {
-                    Console.WriteLine("Entrada inválida.");
-                    continue;
-                }
-
-                try
-                {
-                    switch (opcao)
+                Console.Write("Opção: ");
+                opcao = int.Parse(Console.ReadLine()); 
+                    
+                switch (opcao)
                     {
                         case 1:
                             Console.Write("Matrícula: ");
@@ -70,11 +64,6 @@ namespace Questão_2
                             Console.WriteLine("Opção inválida.");
                             break;
                     }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine("Erro: " + ex.Message);
-                }
 
             } while (opcao != 4);
         }
